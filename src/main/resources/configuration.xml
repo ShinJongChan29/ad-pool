@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	 <typeAliases>
+		<typeAlias alias="member" type="com.ad.adpool.model.Member" />
+		<typeAlias alias="ads" type="com.ad.adpool.model.Ads" />
+		<typeAlias alias="board" type="com.ad.adpool.model.Board" />
+		<typeAlias alias="customer" type="com.ad.adpool.model.Customer" />
+		<typeAlias alias="notice" type="com.ad.adpool.model.Notice" />
+		<typeAlias alias="ads_like" type="com.ad.adpool.model.Ads_like" />
+		<typeAlias alias="viewLog" type="com.ad.adpool.model.ViewLog"/>
+		<typeAlias alias="keywordLog" type="com.ad.adpool.model.KeywordLog"/>
+		<typeAlias alias="reple" type="com.ad.adpool.model.Reple"/>
+	</typeAliases>
+	<mappers>
+		<mapper resource="member.xml" />
+		<mapper resource="ads.xml" />
+		<mapper resource="board.xml" />
+		<mapper resource="customer.xml" />
+		<mapper resource="notice.xml" />
+		<mapper resource="ads_like.xml"/>
+		<mapper resource="viewLog.xml"/>
+		<mapper resource="keywordLog.xml"/>
+		<mapper resource="reple.xml"/>
+	</mappers> 
+</configuration>

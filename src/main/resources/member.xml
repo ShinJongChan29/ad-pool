@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="memberns">
+	<resultMap type="member" id="memberResult">
+		<result property="m_id" column="m_id" />
+		<result property="m_password" column="m_password" />
+		<result property="m_name" column="m_name" />
+		<result property="m_address" column="m_address" />
+		<result property="m_email" column="m_email" />
+		<result property="m_date" column="m_date" />
+		<result property="m_del" column="m_del" />
+		<result property="m_grade" column="m_grade" />
+		<result property="m_ip" column="m_ip" />
+		<result property="m_picture" column="m_picture" />
+		<result property="m_phone" column="m_phone"/>
+	</resultMap>
+
+	<insert id="insert" parameterType="member"> insert into ads_member
+		values(#{m_id},#{m_password},#{m_name},#{m_address},#{m_email},sysdate,#{m_del},#{m_grade},#{m_ip},#{m_picture},#{m_phone})
+	</insert>
+	<select id="select" parameterType="member" resultType="member"> select *
+		from ads_member where m_id = #{m_id}
+	</select>
+	<select id="memberTotal" parameterType="member" resultType="int"> 
+	select count(*) from ads_member 
+		<where>
+			<if test="am_keyword!=null and am_keyword!=''">
+				(m_id like '%'||#{am_keyword}||'%' or
+				 m_name like '%'||#{am_keyword}||'%' or
+				 m_email like '%'||#{am_keyword}||'%' or
+				 m_phone like '%'||#{am_keyword}||'%' )
+			</if>
+		</where>
+	</select>
+	<select id="memberList" parameterType="member" resultType="member"> 
+		select * from (select rowNum rn, a.* from (
+		select * from ads_member 
+		<where>
+			<if test="am_keyword!=null and am_keyword!=''">
+				(m_id like '%'||#{am_keyword}||'%' or
+				 m_name like '%'||#{am_keyword}||'%' or
+				 m_email like '%'||#{am_keyword}||'%' or
+				 m_phone like '%'||#{am_keyword}||'%' )
+			</if>
+		</where>
+		order by m_date desc) a) where rn between #{startRow} and #{endRow}
+		</select>
+	<update id="update">
+		update ads_member set
+		<if test="m_password !=''">m_password=#{m_password},</if>
+
+		<if test="m_picture != null">m_picture=#{m_picture},</if>
+		m_email=#{m_email},m_address=#{m_address} where m_id=#{m_id}
+	</update>
+	<update id="delete" parameterType="member"> update ads_member set
+		m_del='Y' where m_id=#{m_id}
+	</update>
+	<update id="admemberupdate" parameterType="member">
+		update ads_member set m_name=#{m_name},m_email=#{m_email},m_address=#{m_address},m_del=#{m_del},m_grade=#{m_grade}
+		where m_id=#{m_id}
+	</update>
+	<delete id="deletedb" parameterType="member">
+		delete from ads_member where m_id=#{m_id}
+	</delete>
+</mapper>

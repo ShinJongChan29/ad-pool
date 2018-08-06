@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="viewLogns">
+	<resultMap type="viewLog" id="viewLogResult">
+		<result property="v_no" column="v_no"/>
+		<result property="v_ip" column="v_ip"/>
+		<result property="v_viewNo" column="v_viewNo"/>
+	</resultMap>
+	<select id="checkip" parameterType="viewLog" resultType="String">
+		select v_ip from viewLog where v_viewNo=#{v_viewNo} and v_ip=#{v_ip}
+	</select>
+	<insert id="insertip" parameterType="viewLog">
+		insert into viewLog values(v_seq.nextval,#{v_ip},#{v_viewNo})
+	</insert>
+	<delete id="deletelog">
+		delete from viewLog
+	</delete>
+</mapper>

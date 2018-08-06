@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="replens">
+	<resultMap type="reple" id="repleResult">
+		<result property="r_no" column="r_no" />
+		<result property="a_no" column="a_no" />
+		<result property="r_mid" column="r_mid" />
+		<result property="r_content" column="r_content" />
+		<result property="r_del" column="r_del" />
+		<result property="r_mpicture" column="r_mpicture" />
+		<result property="r_date" column="r_date" />
+		<result property="r_ref" column="r_ref" />
+		<result property="r_re_level" column="r_re_level" />
+		<result property="r_re_step" column="r_re_step" />
+		<result property="r_grade" column="r_grade"/>
+		<result property="r_name" column="r_name"/>
+	</resultMap>
+	<insert id="reinsert" parameterType="reple">
+		<if test="r_ref == null and r_ref=='' or r_ref==0">
+			insert into reply
+			values(r_seq.nextval,#{a_no},#{r_mid},#{r_content},'n',#{r_mpicture},
+			sysdate,r_seq.nextval,#{r_re_level},#{r_re_step})
+		</if>
+		
+		<if test="r_ref != null and r_ref!=''">
+			insert into reply
+			values(r_seq.nextval,#{a_no},#{r_mid},#{r_content},'n',#{r_mpicture},
+			sysdate,#{r_ref},#{r_re_level},#{r_re_step})
+		</if>
+	</insert>
+	<select id="repleList" parameterType="reple" resultMap="repleResult">
+		select *
+		from (select rowNum rn, a.* from (select
+		r_no,a_no,r_mid,r_content,r_del,m_picture as r_mpicture , r_re_level,m_grade as r_grade,m_name as r_name,
+		r_ref, r_re_step
+		from reply,ads_member
+		where r_mid=m_id and a_no=#{a_no} order by r_ref desc, r_re_step) a) where rn between #{startRow} and #{endRow}
+	</select>
+	<update id="repleDel" parameterType="int">
+		update reply set r_del = 'y' where r_no=#{r_no}
+	</update>
+	<update id="repleUpdate" parameterType="reple">
+		update reply set r_content=#{r_content} where r_no=#{r_no}
+	</update>
+	
+	<select id="regetTotal" parameterType="reple" resultType="int">
+		select count(*) from reply where a_no=#{a_no}
+	</select>
+</mapper>
+	

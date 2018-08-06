@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="noticens">
+	<resultMap type="notice" id="noticeResult">
+		<result property="n_no" column="n_no" />
+		<result property="n_name" column="n_name" />
+		<result property="n_subject" column="n_subject" />
+		<result property="n_content" column="n_content" />
+		<result property="n_date" column="n_date" />
+		<result property="n_count" column="n_count" />
+		<result property="n_grade" column="n_grade" />
+		<result property="n_del" column="n_del" />
+
+	</resultMap>
+	<insert id="insert" parameterType="notice">
+		insert into notice
+		values(n_seq.nextval,#{n_name},#{n_subject},#{n_content},sysdate,#{n_count},#{n_grade},'n')
+	</insert>
+	<select id="n_select" resultMap="noticeResult">
+		select * from notice where n_no=#{n_no}
+	</select>
+	<select id="nlist" resultType="notice">
+		<!-- select * from notice -->
+		select * from (select rowNum rn, a.* from ( select
+		* from notice
+		where n_grade=#{n_grade}
+		<if test="keyword!=null and keyword!=''">
+			and (n_subject like '%'||#{keyword}||'%' or
+			n_content like '%'||#{keyword}||'%')
+		</if>
+		order by n_date desc) a) where rn between #{startRow} and
+		#{endRow}
+
+	</select>
+	<select id="getTotal" parameterType="notice" resultType="int">
+		select count(*) from notice where n_grade=#{n_grade}
+		<!-- <where>
+			<if test="keyword!=null and keyword!=''">
+				n_subject like '%'||#{keyword}||'%' or
+				n_content like
+				'%'||#{keyword}||'%'
+			</if>
+		</where> -->
+	</select>
+	<select id="maxNum" resultType="int">
+		select nvl(max(n_no),0) + 1 from notice
+	</select>
+	<update id="updateN_count" parameterType="int">
+		update notice set n_count = n_count+1 where n_no=#{n_no}
+	</update>
+	<update id="update" parameterType="notice">
+		update notice set n_subject=#{n_subject}, n_name=#{n_name}, n_content=#{n_content} where n_no=#{n_no}
+	</update>
+	<update id="ndelete" parameterType="int">
+		update notice set n_del='y' where n_no=#{n_no}
+	</update>
+
+</mapper>

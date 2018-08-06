@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="keywordLogns">
+	<resultMap type="keywordLog" id="keywordLogResult">
+		<result property="k_no" column="k_no"/>
+		<result property="k_keyword" column="k_keyword"/>
+		<result property="k_date" column="k_date"/>
+		<result property="k_ip" column="k_ip"/>
+		<result property="cnt" column="cnt"/>
+	</resultMap>
+	<insert id="insertKeyword">
+		insert into keywordLog values(k_seq.nextval,#{k_keyword},sysdate,#{k_ip})	
+	</insert>
+	<select id="selectKey" parameterType="keywordLog" resultType="keywordLog"> 
+	 	
+		select k_keyword from keywordLog where <![CDATA[ (sysdate-k_date) < (1/60/60/24) ]]> and k_ip=#{k_ip} and k_keyword=#{k_keyword}
+	</select>
+	<select id="selectKeyList" resultMap="keywordLogResult">
+		select * from (select rowNum rn, a.* FROM 
+		(select distinct k_keyword,count(k_keyword) 
+		from keywordLog group by k_keyword order 
+		by count(k_keyword) desc) a) where rn between 1 and 5
+	</select>
+	
+	<select id="adKeyList" resultMap="keywordLogResult" parameterType="keywordLog">
+		select * from (select rowNum rn, a.* FROM 
+		(select distinct k_keyword,count(k_keyword) as cnt 
+		from keywordLog 
+		<where>
+			<if test="time != 0 ">
+			 <![CDATA[ (sysdate-k_date) <  #{time} ]]> 
+		 	</if>
+		 	<if test="sec!=null and sec!=''">
+		 		<if test="sec == 'minute'">
+		 			<![CDATA[ (sysdate-k_date) <  (1/24) ]]> 
+		 		</if>
+		 	</if>
+		</where>	
+		group by k_keyword order 
+		by count(k_keyword) desc) a) 
+		
+	</select>
+	<select id="writeList" resultMap="keywordLogResult" parameterType="keywordLog">
+		select k_keyword from keywordLog
+	</select>
+</mapper>

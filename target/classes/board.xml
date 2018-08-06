@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="boardns">
+	<resultMap type="board" id="boardResult">
+		<result property="a_no" column="a_no"/>
+		<result property="a_subject" column="a_subject"/>
+		<result property="a_name" column="a_name"/>
+		<result property="a_content" column="a_content"/>
+		<result property="a_category" column="a_category"/>
+		<result property="a_country" column="a_country"/>
+		<result property="a_kind" column="a_kind"/>
+		<result property="a_grade" column="a_grade"/>
+		<result property="a_goodcount" column="a_goodcount"/>
+		<result property="a_viewcount" column="a_viewcount"/>
+		<result property="a_date" column="a_date"/>
+		<result property="a_filename" column="a_filename"/>
+		<result property="a_del" column="a_del"/>
+		<result property="a_loc" column="a_loc"/>
+		<result property="a_tag" column="a_tag"/>
+		<result property="replycount" column="replycount"/>
+	</resultMap>
+	<!-- <insert id="insert" parameterType="board"> insert into ads values(a_seq.nextval,#{a_subject},#{a_content},#{a_url},#{a_upload},sysdate,#{a_name},#{a_goodcount},#{a_viewcount},#{a_re_id},#{a_ref},#{a_re_step},#{a_re_level},#{a_del},#{a_grade},#{a_category},#{a_country},#{a_kind},#{a_img}) 
+		</insert> <select id="select" resultType="int"> select count(*) from ads 
+		</select> -->
+		<select id="select9" resultType="board">
+		select * from (select * from ads order by a_date desc) where <![CDATA[ rowNum < 10 ]]> 
+		</select>
+	<select id="list" resultMap="boardResult">
+		select * from (select rowNum rn, a.* from (
+		select * from ads 
+		<where>
+			<if test="a_kind!=null and a_kind!=''">
+				 a_kind=#{a_kind}
+			</if>
+			<if test="a_country!=null and a_country!=''">
+				and a_country=#{a_country}
+			</if>
+			<if test="a_category!=null and a_category!=''">
+				and a_category=#{a_category}
+			</if>
+			<if test="comgrade!=null and comgrade!=''">
+				and a_grade = #{comgrade}
+			</if>
+			<if test="keyword!=null and keyword!=''">
+					and (a_subject like '%'||#{keyword}||'%' or
+					a_content like '%'||#{keyword}||'%')
+			</if>
+		</where>
+		order by
+		<if test="pcat!=null">
+			${pcat}
+		</if>
+		<if test="pcat==null">
+			a_date
+		</if>
+		desc) a) where rn between #{startRow} and #{endRow}
+
+	</select>
+
+	<select id="getTotal" parameterType="board" resultType="int">
+		select count(*) from ads
+		<where>
+			<if test="a_kind!=null and a_kind!=''">
+				 a_kind=#{a_kind}
+			</if>
+			<if test="a_country!=null and a_country!=''">
+				and a_country=#{a_country}
+			</if>
+			<if test="a_category!=null and a_category!=''">
+				and a_category=#{a_category}
+			</if>
+			<if test="comgrade!=null and comgrade!=''">
+				and a_grade = #{comgrade}
+			</if>
+			<if test="keyword!=null and keyword!=''">
+					and (a_subject like '%'||#{keyword}||'%' or
+					a_content like '%'||#{keyword}||'%')
+			</if>
+		</where>
+	</select>
+	
+	<select id="detail" parameterType="int" resultType="board">
+		select a.*, (select count(a_no) from reply where a_no=#{no}) as replycount from ads a where a_no=#{no}
+	</select>
+	<select id="detailList" parameterType="string" resultMap="boardResult">
+		select * from (select rowNum rn, a.* from (
+		select * from ads where a_category = #{a_category} order by a_date desc) a)
+		where rn between 1 and 4
+	</select>
+	<update id="upviewcount" parameterType="int">
+		update ads set a_viewcount = a_viewcount+1 where a_no=#{no}
+	</update>
+	<update id="upLike" parameterType="int">
+		update ads set a_goodcount = a_goodcount+1 where a_no=#{like_no}
+	</update>
+	<update id="downLike" parameterType="int">
+		update ads set a_goodcount = a_goodcount-1 where a_no=#{del_like}
+	</update>
+	<select id="mFavoritList" resultMap="boardResult">
+		select a.* from ads_like al, ads a where al.l_lno=a.a_no and al.l_mid=#{m_id} order by a.a_date desc
+	</select>
+</mapper>

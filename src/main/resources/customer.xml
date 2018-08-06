@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="customerns">
+	<resultMap type="customer" id="customerResult">
+		<result property="c_no" column="c_no" />
+		<result property="c_subject" column="c_subject" />
+		<result property="c_content" column="c_content" />
+		<result property="c_date" column="c_date" />
+		<result property="c_name" column="c_name" />
+		<result property="c_count" column="c_count" />
+		<result property="c_mid" column="c_mid" />
+		<result property="c_ref" column="c_ref" />
+		<result property="c_re_step" column="c_re_step" />
+		<result property="c_re_level" column="c_re_level" />
+		<result property="c_ip" column="c_ip" />
+		<result property="c_del" column="c_del" />
+
+	</resultMap>
+	<insert id="insert" parameterType="customer">
+		insert into customer
+		values(c_seq.nextval,#{c_subject},#{c_content},sysdate,#{c_name},#{c_count},#{c_mid},#{c_ref},#{c_re_step},#{c_re_level},#{c_ip},'n')
+	</insert>
+	<select id="select" resultMap="customerResult">
+		select * from customer where
+		c_no=#{c_no}
+	</select>
+	<select id="clist" resultMap="customerResult">
+		<!-- select * from customer -->
+		select * from (select rowNum rn, a.* from (
+		select * from customer
+		<where>
+			<if test="keyword!=null and keyword!=''">
+				<if test="search=='subcon'">
+					c_subject like '%'||#{keyword}||'%' or
+					c_content like
+					'%'||#{keyword}||'%'
+				</if>
+				<if test="search!='subcon'">
+					${search} like '%'||#{keyword}||'%'
+				</if>
+			</if>
+		</where>
+		<!-- order by <if test="ccat!=null"> ${ccat} </if> <if test="ccat==null"> 
+			c_date </if> -->
+		order by c_ref desc, c_re_step) a) where rn between #{startRow} and
+		#{endRow}
+
+	</select>
+	<select id="getTotal" parameterType="customer" resultType="int">
+		select count(*) from customer
+		<where>
+			<if test="keyword!=null and keyword!=''">
+				<if test="search=='subcon'">
+					c_subject like '%'||#{keyword}||'%' or
+					c_content like
+					'%'||#{keyword}||'%'
+				</if>
+				<if test="search!='subcon'">
+					${search} like '%'||#{keyword}||'%'
+				</if>
+			</if>
+		</where>
+	</select>
+	<select id="maxNum" resultType="int">
+		select nvl(max(c_no), 0)+1 from
+		customer
+	</select>
+	<update id="updateReadcount" parameterType="int">
+		update customer set
+		c_count = c_count+1 where c_no=#{c_no}
+	</update>
+	<update id="update" parameterType="customer">
+		update customer set
+		c_subject=#{c_subject}, c_content=#{c_content} where c_no=#{c_no}
+	</update>
+	<update id="delete" parameterType="int">
+		update customer set c_del='y'
+		where c_no=#{c_no}
+	</update>
+	<update id="updateC_re_step" parameterType="customer">
+		update customer set
+		c_re_step=c_re_step+1 where c_ref=#{c_ref} and c_re_step >
+		#{c_re_step}
+	</update>
+</mapper>

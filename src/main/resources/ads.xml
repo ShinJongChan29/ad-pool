@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="adsns">
+	<resultMap type="ads" id="adsResult">
+		<result property="a_no" column="a_no" />
+		<result property="a_subject" column="a_subject" />
+		<result property="a_name" column="a_name" />
+		<result property="a_content" column="a_content" />
+		<result property="a_category" column="a_category" />
+		<result property="a_country" column="a_country" />
+		<result property="a_url" column="a_url" />
+		<result property="a_kind" column="a_kind" />
+		<result property="a_grade" column="a_grade" />
+		<result property="a_goodcount" column="a_goodcount" />
+		<result property="a_viewcount" column="a_viewcount" />
+		<result property="a_date" column="a_date" />
+		<result property="a_filename" column="a_filename" />
+		<result property="a_del" column="a_del" />
+		<result property="a_loc" column="a_loc" />
+		<result property="a_tag" column="a_tag" />
+		<result property="rn" column="rn" />
+	</resultMap>
+	<insert id="insert" parameterType="ads">
+		insert into
+		ads(a_no,a_subject,a_content,a_url,a_filename,a_date,a_name,a_goodcount,a_viewcount,a_del,a_grade,a_category,a_country,a_kind,a_loc,a_tag)
+		values(a_seq.nextval,#{a_subject},#{a_content},#{a_url},#{a_filename},sysdate,#{a_name},#{a_goodcount},#{a_viewcount},#{a_del},#{a_grade},#{a_category},#{a_country},#{a_kind},#{a_loc},#{a_tag})
+	</insert>
+	<select id="select" resultType="int">
+		select count(*) from ads
+	</select>
+	<select id="selectAds" resultType="ads" parameterType="ads">
+		select *
+		from ads
+		where a_no =#{a_no}
+	</select>
+	<select id="selectNext" resultType="ads" parameterType="ads">
+		select * from (select rowNum rn, a.*
+		from (
+		select * from ads
+		<where>
+			<if test="a_grade !=null and a_grade !=0">
+				a_grade =#{a_grade}
+			</if>
+		</where>
+		order by a_date desc) a)
+		where rn = #{rn}
+	</select>
+	<select id="selectRn" resultMap="adsResult" parameterType="ads">
+		select * from (select rowNum rn, a.*
+		from (
+		select * from ads
+		<where>
+			<if test="a_grade !=null and a_grade !=0">
+				a_grade =#{a_grade}
+			</if>
+		</where>
+		order by a_date desc) a)
+		where a_no=#{a_no}
+	</select>
+	<select id="list" resultMap="adsResult">
+		select * from (select rowNum rn, a.*
+		from (
+		select * from ads
+		<where>
+			<if test="a_grade !=null and a_grade !=0">
+				a_grade =#{a_grade}
+			</if>
+		</where>
+		order by a_date
+		desc) a)
+		where rn = #{rn}
+	</select>
+	<select id="getTotal" parameterType="ads" resultType="int">
+		select count(*) from ads
+		<!-- <where> <if test="keyword!=null and keyword!=''"> <if test="search=='subcon'"> 
+			a_subject like '%'||#{keyword}||'%' or a_content like '%'||#{keyword}||'%' 
+			</if> <if test="search!='subcon'"> ${search} like '%'||#{keyword}||'%' </if> 
+			</if> </where> -->
+	</select>
+
+	<!-- <select id="adslist" resultType="ads" parameterType="ads"> select * 
+		from (select rowNum rn, a.* from ( select * from ads order by a_date desc) 
+		a) where rn between #{startRow} and #{endRow} </select> -->
+	<select id="adslist" resultMap="adsResult" parameterType="ads">
+		select * from (select RowNum rn, a.* from(select*from ads
+		<where>
+			<if test="a_kind!=null and a_kind!=''">
+				a_kind=#{a_kind}
+			</if>
+			<if test="a_country!=null and a_country!=''">
+				and a_country=#{a_country}
+			</if>
+			<if test="a_category!=null and a_category!=''">
+				and a_category=#{a_category}
+			</if>
+			<if test="division!=null and division!=''">
+				<if test="division==5">
+					and a_grade not in 1
+				</if>
+				<if test="division!=5">
+					and a_grade = #{a_grade}
+				</if>
+			</if>
+
+			<if test="keyword!=null and keyword!=''">
+				and (a_subject like '%'||#{keyword}||'%' or
+				a_content like
+				'%'||#{keyword}||'%')
+			</if>
+		</where>
+		order by a_date desc) a) where rn between #{startRow} and #{endRow}
+
+	</select>
+	<select id="adadstotal" resultType="int" parameterType="ads">
+		select count(*) from ads
+		<where>
+			<if test="a_kind!=null and a_kind!=''">
+				a_kind=#{a_kind}
+			</if>
+			<if test="a_country!=null and a_country!=''">
+				and a_country=#{a_country}
+			</if>
+			<if test="a_category!=null and a_category!=''">
+				and a_category=#{a_category}
+			</if>
+			<if test="division!=null and division!=''">
+				<if test="division==5">
+					a_grade not in 1
+				</if>
+				<if test="division!=5">
+					a_grade = #{a_grade}
+				</if>
+			</if>
+			<if test="keyword!=null and keyword!=''">
+				and (a_subject like '%'||#{keyword}||'%' or
+				a_content like
+				'%'||#{keyword}||'%')
+			</if>
+		</where>
+	</select>
+	<select id="selectCom" resultType="ads" parameterType="ads">
+		select * from ads
+		<where>
+			<if test="division==0">
+				a_grade not in 1
+			</if>
+			<if test="division!=0">
+				a_grade = #{a_grade}
+			</if>
+		</where>
+	</select>
+	<update id="updateAds" parameterType="ads">
+		update ads set
+		a_subject=#{a_subject},a_name=#{a_name},a_content=#{a_content},
+		a_category=#{a_category},a_kind=#{a_kind},a_grade=#{a_grade},a_filename=#{a_filename},
+		a_del=#{a_del}, a_loc=#{a_loc},a_url=#{a_url},a_tag=#{a_tag} where
+		a_no=#{a_no}
+	</update>
+	<update id="adsdelY" parameterType="int">
+		update ads set a_del ='Y'
+		where a_no=#{a_no}
+	</update>
+	<update id="adsPermit" parameterType="ads">
+		update ads set
+		a_grade=#{a_grade} where a_no=#{a_no}
+	</update>
+	<delete id="adsdelDB" parameterType="int">
+		delete from ads where
+		a_no=#{a_no}
+	</delete>
+	<select id="sCategory" resultMap="adsResult">
+		select distinct a_category from
+		ads
+	</select>
+	<select id="sCountry" resultMap="adsResult">
+		select distinct a_country from
+		ads
+	</select>
+</mapper>

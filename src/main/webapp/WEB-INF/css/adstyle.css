@@ -1,0 +1,241 @@
+.loginbox {
+	border-radius: 10;
+	border: 1px solid;
+}
+
+.container {
+	height: 2%;
+	width: 100%;
+	text-align: center;
+	margin: 0px auto;
+	vertical-align: middle;
+}
+
+.wrapper {
+	position: relative;
+	padding-top: 87px;
+	border: 1px none;
+	text-align: center;
+	min-height: 100%;
+}
+
+.topbar {
+	padding-top: 10px;
+	border: none;
+	background-color: #808080;
+}
+
+.topbanner {
+	height: 15%;
+	padding-top: 60px;
+	border: none;
+	background-color: #808080;
+	border: none;
+}
+
+.contents {
+	border: 1px none;
+	text-align: center;
+	display: grid;
+	overflow: hidden;
+	min-height: 100%;
+}
+
+@media ( max-width :768px) {
+	.contents {
+		padding-top: 15%;
+	}
+}
+
+.search {
+	margin-left: 20%;
+}
+
+.ImgGridArea {
+	/* height: 70%; */
+	text-align: center;
+	border: 1px none;
+}
+
+/**상단 메뉴바**/
+.topbar_ul {
+	
+	float: right;
+	display: -webkit-inline-box;
+	list-style: none;
+	padding-right: 40px;
+	list-style: none;
+	text-decoration: none;
+}
+
+.topbar_ul>li {
+	padding: 3px;
+	color: white;
+}
+
+.image {
+	float: left;
+}
+
+.topbanner_ul {
+	float: none;
+	display: -webkit-inline-box;
+	list-style: none;
+}
+
+.topbanner_ul>li {
+	color: blue;
+	padding: 3px;
+}
+
+a {
+	color: #f5f5f5;
+	font-family: 'Godo';
+	text-decoration: none;
+}
+
+h1 {
+	font-size: 3em;
+	overflow: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: 'Godo';
+	color: gray;
+}
+
+.nav {
+	font-family: 'Godo';
+	font-size: 20px;
+}
+
+.masthead {
+	margin-left: -10px;
+	/* margin-top: 10%;
+	margin-bottom: 10%; */
+}
+
+.card {
+	height: 100%;
+	width: 100%;
+	text-align: center;
+	vertical-align: middle;
+	padding-top: 1%;
+}
+
+.tapmenu {
+	height: 100%;
+	width: 85%;
+	text-align: center;
+	vertical-align: middle;
+	padding-top: 1%;
+}
+
+.cardbody {
+	
+}
+
+.row {
+	margin-right: 0px;
+}
+
+.centered {
+	display: table;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+@font-face {
+	font-family: 'Godo';
+	font-style: normal;
+	font-weight: 400;
+	src:
+		url('//cdn.jsdelivr.net/korean-webfonts/1/corps/godo/Godo/GodoM.woff2')
+		format('woff2'),
+		url('//cdn.jsdelivr.net/korean-webfonts/1/corps/godo/Godo/GodoM.woff')
+		format('woff');
+}
+
+@font-face {
+	font-family: 'Godo';
+	font-style: normal;
+	font-weight: 700;
+	src:
+		url('//cdn.jsdelivr.net/korean-webfonts/1/corps/godo/Godo/GodoB.woff2')
+		format('woff2'),
+		url('//cdn.jsdelivr.net/korean-webfonts/1/corps/godo/Godo/GodoB.woff')
+		format('woff');
+}
+
+.godo * {
+	font-family: 'Godo', sans-serif;
+}
+
+/** 이하는 공통 **/
+.normal {
+	font-style: normal;
+}
+
+.w250 {
+	font-weight: 250;
+}
+
+.w300 {
+	font-weight: 300;
+}
+
+.w350 {
+	font-weight: 350;
+}
+
+.w400 {
+	font-weight: 400;
+}
+
+.w500 {
+	font-weight: 500;
+}
+
+.w700 {
+	font-weight: 700;
+}
+
+.w800 {
+	font-weight: 800;
+}
+
+.w900 {
+	font-weight: 900;
+}
+
+li span {
+	line-height: 1.8;
+	font-size: 1.3em;
+}
+
+.scale {
+	transform: scale(1);
+	-webkit-transform: scale(1);
+	-moz-transform: scale(1);
+	-ms-transform: scale(1);
+	-o-transform: scale(1);
+	transition: all 0.3s ease-in-out; /* 부드러운 모션을 위해 추가*/
+}
+
+.scale:hover {
+	transform: scale(1.2);
+	-webkit-transform: scale(1.2);
+	-moz-transform: scale(1.2);
+	-ms-transform: scale(1.2);
+	-o-transform: scale(1.2);
+}
+
+.img2 {
+	/* width: 325px;
+	height: 280px; */
+	overflow: hidden
+}
+/* 부모를 벗어나지 않고 내부 이미지만 확대 */
+/* .navbar {
+	margin-bottom: -40px;
+} */

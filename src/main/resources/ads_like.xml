@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="likens">
+	<resultMap type="ads_like" id="likeResult">
+		<result property="l_no" column="l_no" />
+		<result property="l_mid" column="l_mid" />
+		<result property="l_lno" column="l_lno" />
+	</resultMap>
+	<insert id="insertLike" parameterType="ads_like">
+		insert into ads_like values (l_seq.nextval,#{l_mid},#{l_lno})
+	</insert>
+	<select id="selectLike" parameterType="String" resultType="ads_like">
+		select l_lno from ads_like where l_mid=#{like_id}
+	</select>
+	<delete id="deleteLike" parameterType="int">
+		delete from ads_like where l_lno =#{del_like}	
+	</delete>
+</mapper>
